@@ -12,7 +12,8 @@
 
 Helpful commands for Windows Service:
 
-```dotnet publish --output "C:\RomRepoService"
+```
+dotnet publish --output "C:\RomRepoService"
 
 sc.exe create "RomRepo Service" binpath= "C:\RomRepoService\romrepo.win.exe"
 
@@ -20,6 +21,7 @@ sc.exe start "RomRepo Service"
 
 sc.exe stop "RomRepo Service"
 
-sc.exe delete "RomRepo Service"```
+sc.exe delete "RomRepo Service"
+```
 
 WIP
