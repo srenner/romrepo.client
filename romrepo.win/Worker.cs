@@ -29,11 +29,8 @@ namespace romrepo.win
             {
                 string uniqueID = Guid.NewGuid().ToString();
                 _settings = await _appService.SaveSystemSetting(SystemSettingEnum.UniqueIdentifier.Value, uniqueID, updateCache: true);
+                _logger.LogInformation("Unique ID set to: {uniqueID}", uniqueID);
             }
-
-
-
-
 
             _logger.LogInformation("Worker initialized at: {time}", DateTimeOffset.Now);
             return true;
@@ -43,31 +40,11 @@ namespace romrepo.win
         {
             if(await InitAsync())
             {
-
-                //var newCores = await _coreService.DiscoverCores();
-                //if (newCores?.Count() > 0)
-                //{
-                //    foreach (var coreFolder in newCores)
-                //    {
-                        
-                //        var core = coreFolder.FromDirectoryInfo();
-                //        if (core != null)
-                //        {
-                //            await _coreService.AddCore(core);
-                //        }
-                //    }
-                //}
                 var cores = await _coreService.GetActiveCores();
-
-
-
+                
                 while (!stoppingToken.IsCancellationRequested)
                 {
-                    //if (_logger.IsEnabled(LogLevel.Information))
-                    //{
-                    //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                    //}
-                    await Task.Delay(1000, stoppingToken);
+                    //
                 }
             }
         }
