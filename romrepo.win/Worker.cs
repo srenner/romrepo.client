@@ -44,7 +44,7 @@ namespace romrepo.win
                 
                 while (!stoppingToken.IsCancellationRequested)
                 {
-                    //
+                    await Task.Delay(1, stoppingToken);
                 }
             }
         }
