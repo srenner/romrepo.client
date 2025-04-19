@@ -58,6 +58,7 @@ namespace romrepo.win
             host.UseDefaultFiles();
             host.UseStaticFiles();
             host.MapControllers();
+            host.UseHttpsRedirection();
 
             Task webTask = host.RunAsync();
             webTask.Wait();
