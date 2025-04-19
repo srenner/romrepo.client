@@ -10,6 +10,9 @@
 ----------------------------------------------
 ```
 
+Combination web server and file system watcher for the client installation.
+
+
 Helpful commands for Windows Service:
 
 ```
@@ -23,5 +26,3 @@ sc.exe stop "RomRepo Service"
 
 sc.exe delete "RomRepo Service"
 ```
-
-WIP
