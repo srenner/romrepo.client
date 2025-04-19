@@ -20,10 +20,6 @@ namespace romrepo.win
     {
         public static void Main(string[] args)
         {
-            //SQLitePCL.Batteries.Init()
-
-
-
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.Configure<HostOptions>(options =>
@@ -35,18 +31,15 @@ namespace romrepo.win
             {
                 options.ServiceName = "RomRepo Service";
             });
-
-            //builder.Services.AddHostedService<Worker>();
-            //builder.Services.AddScoped<IScopedProcessingService, Worker>();
-
+            
             builder.Services.AddHostedService<ScopedBackgroundService>();
             builder.Services.AddScoped<IScopedProcessingService, Worker>();
-
 
             builder.Services.AddAuthorization();
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            //builder.Services.AddRazorPages();
             builder.Services.AddDbContext<RomRepoContext>();
             builder.Services.AddScoped<IClientRepo, ClientRepo>();
             builder.Services.AddScoped<IAppService, AppService>();
@@ -56,26 +49,18 @@ namespace romrepo.win
             builder.Services.AddMemoryCache();
             var host = builder.Build();
 
-            // Use Swagger middleware
             host.UseSwagger();
             host.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "RomRepo API v1");
-                c.RoutePrefix = string.Empty; // Set Swagger UI at the app's root
+                c.RoutePrefix = "swagger";
             });
 
-            //host.UseHttpsRedirection();
-            //host.UseAuthorization();
+            host.UseDefaultFiles();
+            host.UseStaticFiles();
             host.MapControllers();
 
-            //host.MapRazorPages();
-            //host.MapGet("/", () => DateTime.UtcNow.ToLongTimeString());
-
-            //host.Run();
-
             Task webTask = host.RunAsync();
-
-
             webTask.Wait();
         }
     }
