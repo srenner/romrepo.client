@@ -39,7 +39,6 @@ namespace romrepo.win
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            //builder.Services.AddRazorPages();
             builder.Services.AddDbContext<RomRepoContext>();
             builder.Services.AddScoped<IClientRepo, ClientRepo>();
             builder.Services.AddScoped<IAppService, AppService>();
