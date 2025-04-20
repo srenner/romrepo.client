@@ -1,7 +1,5 @@
 using romrepo.lib.Models;
-using romrepo.lib.Services;
 using romrepo.lib.Services.Interfaces;
-using System.Runtime;
 
 namespace romrepo.win
 {
@@ -40,13 +38,56 @@ namespace romrepo.win
         {
             if(await InitAsync())
             {
-                var cores = await _coreService.GetActiveCores();
-                
+                var rootFolder = _settings.Find(f => f.Name == SystemSettingEnum.RomRootFolder.Value).Value;
+
+                FileSystemWatcher watcher = new FileSystemWatcher(rootFolder);
+                watcher.IncludeSubdirectories = true;
+                watcher.NotifyFilter = 
+                      NotifyFilters.Attributes
+                    | NotifyFilters.CreationTime
+                    | NotifyFilters.DirectoryName
+                    | NotifyFilters.FileName
+                    | NotifyFilters.LastAccess
+                    | NotifyFilters.LastWrite
+                    | NotifyFilters.Security
+                    | NotifyFilters.Size;
+
+                watcher.Changed += OnChanged;
+                watcher.Created += OnCreated;
+                watcher.Deleted += OnDeleted;
+                watcher.Renamed += OnRenamed;
+                watcher.Error += OnError;
+
+                watcher.IncludeSubdirectories = true;
+                watcher.EnableRaisingEvents = true;
+
+
                 while (!stoppingToken.IsCancellationRequested)
                 {
                     await Task.Delay(1, stoppingToken);
                 }
             }
+        }
+
+        private void OnChanged(object sender, FileSystemEventArgs e)
+        {
+            _logger.LogInformation($"File: {e.FullPath} {e.ChangeType}");
+        }
+        private void OnCreated(object sender, FileSystemEventArgs e)
+        {
+            _logger.LogInformation($"File: {e.FullPath} {e.ChangeType}");
+        }
+        private void OnDeleted(object sender, FileSystemEventArgs e)
+        {
+            _logger.LogInformation($"File: {e.FullPath} {e.ChangeType}");
+        }
+        private void OnRenamed(object sender, RenamedEventArgs e)
+        {
+            _logger.LogInformation($"File: {e.OldFullPath} renamed to {e.FullPath}");
+        }
+        private void OnError(object sender, ErrorEventArgs e)
+        {
+            _logger.LogError($"File: {e.GetException().Message}");
         }
     }
 }
