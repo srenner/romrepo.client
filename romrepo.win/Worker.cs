@@ -34,40 +34,64 @@ namespace romrepo.win
             return true;
         }
 
-        public async Task ExecuteAsync(CancellationToken stoppingToken)
+        public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             if(await InitAsync())
             {
                 var rootFolder = _settings.Find(f => f.Name == SystemSettingEnum.RomRootFolder.Value).Value;
-
-                FileSystemWatcher watcher = new FileSystemWatcher(rootFolder);
-                watcher.IncludeSubdirectories = true;
-                watcher.NotifyFilter = 
-                      NotifyFilters.Attributes
-                    | NotifyFilters.CreationTime
-                    | NotifyFilters.DirectoryName
-                    | NotifyFilters.FileName
-                    | NotifyFilters.LastAccess
-                    | NotifyFilters.LastWrite
-                    | NotifyFilters.Security
-                    | NotifyFilters.Size;
-
-                watcher.Changed += OnChanged;
-                watcher.Created += OnCreated;
-                watcher.Deleted += OnDeleted;
-                watcher.Renamed += OnRenamed;
-                watcher.Error += OnError;
-
-                watcher.IncludeSubdirectories = true;
-                watcher.EnableRaisingEvents = true;
-
-
-                while (!stoppingToken.IsCancellationRequested)
+                if(!string.IsNullOrWhiteSpace(rootFolder))
                 {
-                    await Task.Delay(1, stoppingToken);
+                    int newCoreCount = await _coreService.AutoAddDiscoveredCores(rootFolder, cancellationToken);
+                    if (newCoreCount > 0)
+                    {
+                        _logger.LogInformation("Added {newCoreCount} new cores.", newCoreCount);
+                    }
+                    else
+                    {
+                        _logger.LogInformation("No new cores found.");
+                    }
+
+                    using var watcher = BuildFileSystemWatcher(rootFolder, cancellationToken);
+
+                    while (!cancellationToken.IsCancellationRequested)
+                    {
+                        await Task.Delay(1, cancellationToken);
+                    }
+                }
+                else
+                {
+                    _logger.LogError("Root folder not set in settings.");
+                    return;
                 }
             }
         }
+
+        private FileSystemWatcher BuildFileSystemWatcher(string rootFolder, CancellationToken cancellationToken)
+        {
+            FileSystemWatcher watcher = new FileSystemWatcher(rootFolder);
+            watcher.IncludeSubdirectories = true;
+            watcher.NotifyFilter =
+                  NotifyFilters.Attributes
+                | NotifyFilters.CreationTime
+                | NotifyFilters.DirectoryName
+                | NotifyFilters.FileName
+                | NotifyFilters.LastAccess
+                | NotifyFilters.LastWrite
+                | NotifyFilters.Security
+                | NotifyFilters.Size;
+
+            watcher.Changed += OnChanged;
+            watcher.Created += OnCreated;
+            watcher.Deleted += OnDeleted;
+            watcher.Renamed += OnRenamed;
+            watcher.Error += OnError;
+
+            watcher.IncludeSubdirectories = true;
+            watcher.EnableRaisingEvents = true;
+
+            return watcher;
+        }
+
 
         private void OnChanged(object sender, FileSystemEventArgs e)
         {

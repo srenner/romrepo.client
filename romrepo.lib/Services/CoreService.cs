@@ -38,12 +38,39 @@ namespace romrepo.lib.Services
             return await _repo.GetInactiveCores();
         }
 
-        public async Task<IEnumerable<DirectoryInfo>> DiscoverCores()
+        public async Task<int> AutoAddDiscoveredCores(string rootFolder, CancellationToken cancellationToken)
+        {
+            var cores = new List<Core>();
+            if (!string.IsNullOrWhiteSpace(rootFolder))
+            {
+                var newCores = await DiscoverCores(rootFolder, cancellationToken);
+                if (newCores?.Count() > 0)
+                {
+                    foreach (var coreDir in newCores)
+                    {
+                        cores.Add(ConvertDirToCore(coreDir));
+                    }
+                    await _repo.AddCores(cores);
+                }
+            }
+            else
+            {
+                _logger.LogError("Root folder not passed to AutoAddDiscoveredCores().");
+            }
+            return cores.Count;
+        }
+
+
+        /// <summary>
+        /// Discover filesystem folders that could be new cores.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<DirectoryInfo>> DiscoverCores(string rootFolder, CancellationToken cancellationToken)
         {
             var newFolders = new List<DirectoryInfo>();
             var cores = await _repo.GetAllCores();
 
-            var rootFolder = await _appService.GetSystemSettingValue(SystemSettingEnum.RomRootFolder);
             if(rootFolder?.Length > 0)
             {
                 DirectoryInfo dir = new DirectoryInfo(rootFolder);
@@ -68,6 +95,24 @@ namespace romrepo.lib.Services
             }
 
             return newFolders;
+        }
+
+        public static Core ConvertDirToCore(DirectoryInfo dir)
+        {
+            var now = DateTime.UtcNow;
+            return new Core
+            {
+                Name = dir.Name,
+                Path = dir.FullName,
+                Description = "",
+                FileExtensions = "",
+                ZipAsRom = false,
+                SevenZipAsRom = false,
+                IsActive = false,
+                IsFavorite = false,
+                DateCreated = now,
+                DateUpdated = now
+            };
         }
 
         public List<Core> GetFileSystemCores()

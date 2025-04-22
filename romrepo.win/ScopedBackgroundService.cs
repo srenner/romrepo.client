@@ -11,15 +11,15 @@
     {
         private const string ClassName = nameof(ScopedBackgroundService);
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             logger.LogInformation(
                 "{Name} is running.", ClassName);
 
-            await DoWorkAsync(stoppingToken);
+            await DoWorkAsync(cancellationToken);
         }
 
-        private async Task DoWorkAsync(CancellationToken stoppingToken)
+        private async Task DoWorkAsync(CancellationToken cancellationToken)
         {
             logger.LogInformation(
                 "{Name} is working.", ClassName);
@@ -29,16 +29,16 @@
                 IScopedProcessingService scopedProcessingService =
                     scope.ServiceProvider.GetRequiredService<IScopedProcessingService>();
 
-                await scopedProcessingService.ExecuteAsync(stoppingToken);
+                await scopedProcessingService.ExecuteAsync(cancellationToken);
             }
         }
 
-        public override async Task StopAsync(CancellationToken stoppingToken)
+        public override async Task StopAsync(CancellationToken cancellationToken)
         {
             logger.LogInformation(
                 "{Name} is stopping.", ClassName);
 
-            await base.StopAsync(stoppingToken);
+            await base.StopAsync(cancellationToken);
         }
     }
 }

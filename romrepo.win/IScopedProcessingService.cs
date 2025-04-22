@@ -2,7 +2,7 @@
 {
     public interface IScopedProcessingService
     {
-        Task ExecuteAsync(CancellationToken stoppingToken);
+        Task ExecuteAsync(CancellationToken cancellationToken);
 
     }
 }

@@ -37,8 +37,11 @@ namespace romrepo.lib.Models
         /// </summary>
         public string? FileExtensions { get; set; }
 
-        public bool IsFavorite { get; set; } = false;
         public bool IsActive { get; set; } = true;
+        
+        public bool IsFavorite { get; set; } = false;
+        
+        public bool IsHidden { get; set; } = false;
 
         public ICollection<Rom> Roms { get; set; }
 
