@@ -4,7 +4,7 @@ namespace romrepo.lib.Services.Interfaces
 {
     public interface IRomService
     {
-        Task<Rom> GetRom(int romID);
+        Task<Rom?> GetRom(int romID);
         Task<IEnumerable<Rom>> GetRomsForCore(int coreID);
 
         /// <summary>

@@ -17,7 +17,7 @@ namespace romrepo.lib.Services
             _repo = repo;
         }
 
-        public async Task<Rom> GetRom(int romID)
+        public async Task<Rom?> GetRom(int romID)
         {
             return await _repo.GetRom(romID);
         }

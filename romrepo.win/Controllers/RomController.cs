@@ -4,6 +4,7 @@ using romrepo.lib.Models;
 using romrepo.lib.Services.Interfaces;
 using RomRepo.service.Services;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Security.Cryptography;
 
 namespace romrepo.win.Controllers
@@ -23,7 +24,7 @@ namespace romrepo.win.Controllers
             _coreService = coreService;
         }
 
-        [HttpGet]
+        [HttpGet("{romID}")]
         public async Task<ActionResult<Rom>> GetRom(int romID)
         {
             var rom = await _service.GetRom(romID);
@@ -50,29 +51,36 @@ namespace romrepo.win.Controllers
             }
         }
 
-        [HttpGet("crc32")]
+        [HttpGet("crc32/{romID}")]
         public async Task<ActionResult<string>> GetCRCChecksum(int romID)
         {
             var rom = await _service.GetRom(romID);
-            if (rom.IsArchive())
+            if(rom != null)
             {
-                var files = rom.ExtractToFile(isTemporary: true);
-                if (files?.Count() > 0)
+                if (rom.IsArchive())
                 {
-                    return ChecksumService.CalculateCRC(files[0]);
+                    var files = rom.ExtractToFile(isTemporary: true);
+                    if (files?.Count() > 0)
+                    {
+                        return ChecksumService.CalculateCRC(files[0]);
+                    }
+                    else
+                    {
+                        return BadRequest("Archive is empty");
+                    }
                 }
                 else
                 {
-                    return BadRequest("Archive is empty");
+                    return ChecksumService.CalculateCRC(rom.Path);
                 }
             }
             else
             {
-                return ChecksumService.CalculateCRC(rom.Path);
+                return NotFound();
             }
         }
 
-        [HttpGet("md5")]
+        [HttpGet("md5/{romID}")]
         public async Task<ActionResult<string>> GetMD5Checksum(int romID)
         {
             var rom = await _service.GetRom(romID);
@@ -94,7 +102,7 @@ namespace romrepo.win.Controllers
             }
         }
 
-        [HttpGet("sha1")]
+        [HttpGet("sha1/{romID}")]
         public async Task<ActionResult<string>> GetSHA1Checksum(int romID)
         {
             var rom = await _service.GetRom(romID);
@@ -116,7 +124,7 @@ namespace romrepo.win.Controllers
             }
         }
 
-        [HttpGet("sha256")]
+        [HttpGet("sha256/{romID}")]
         public async Task<ActionResult<string>> GetSHA256Checksum(int romID)
         {
             var rom = await _service.GetRom(romID);

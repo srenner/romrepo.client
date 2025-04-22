@@ -77,7 +77,7 @@ namespace romrepo.lib.DataAccess
 
         #region ===== Rom =================================
 
-        public async Task<Rom> GetRom(int romID)
+        public async Task<Rom?> GetRom(int romID)
         {
             return await _context.Rom.FindAsync(romID);
         }

@@ -25,7 +25,7 @@ namespace romrepo.lib.DataAccess
 
         #region ===== Rom =================================
 
-        Task<Rom> GetRom(int romID);
+        Task<Rom?> GetRom(int romID);
 
         Task<IEnumerable<Rom>> GetRomsForCore(int coreID);
         Task<Rom> AddRom(Rom rom);
