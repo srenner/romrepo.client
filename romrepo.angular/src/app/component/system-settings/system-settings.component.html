@@ -1,6 +1,6 @@
 <ul>
     <li *ngFor="let setting of settings" class="disabled">
-        <span>{{setting.name}}</span>
+        <span>{{setting.description || setting.name}}</span>
         <span class="me-1">:</span>
         <span *ngIf="setting.dataType === 'bool'">
             <span *ngIf="setting.value === '1'">
