@@ -68,6 +68,11 @@ namespace romrepo.win
 
         private FileSystemWatcher BuildFileSystemWatcher(string rootFolder, CancellationToken cancellationToken)
         {
+            if(Directory.Exists(rootFolder) == false)
+            {
+                _logger.LogError("Root folder does not exist: {rootFolder}", rootFolder);
+                return null;
+            }
             FileSystemWatcher watcher = new FileSystemWatcher(rootFolder);
             watcher.IncludeSubdirectories = true;
             watcher.NotifyFilter =
