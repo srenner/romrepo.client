@@ -42,13 +42,13 @@ namespace romrepo.lib.Services
 
         public async Task<List<SystemSetting>> InitSystemSettings()
         {
-            await _repo.InitSystemSetting("UniqueIdentifier", "string", true, true);
-            await _repo.InitSystemSetting("SendAnalytics", "bool", false, false);
-            await _repo.InitSystemSetting("UseApi", "bool", false, false);
-            await _repo.InitSystemSetting("RomRootFolder", "path", true, false);
-            await _repo.InitSystemSetting("SavesRootFolder", "path", false, false);
-            await _repo.InitSystemSetting("SaveStatesRootFolder", "path", false, false);
-            await _repo.InitSystemSetting("ApiKey", "string", false, true);
+            await _repo.InitSystemSetting("UniqueIdentifier", "Installation ID", "string", true, true);
+            await _repo.InitSystemSetting("SendAnalytics", "Send Analytics", "bool", false, false);
+            await _repo.InitSystemSetting("UseApi", "Use Server API", "bool", false, false);
+            await _repo.InitSystemSetting("RomRootFolder", "Rom Root Folder", "path", true, false);
+            await _repo.InitSystemSetting("SavesRootFolder", "Saves Root Folder", "path", false, false);
+            await _repo.InitSystemSetting("SaveStatesRootFolder", "Savestates Root Folder", "path", false, false);
+            await _repo.InitSystemSetting("ApiKey", "API Key", "string", false, true);
 
             return await this.GetSystemSettings();
         }

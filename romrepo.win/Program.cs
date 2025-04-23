@@ -39,6 +39,19 @@ namespace romrepo.win
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: "localhost",
+                                  policy =>
+                                  {
+                                      policy.WithOrigins("http://localhost:5000",       // deployed as service
+                                                          "http://localhost:62746",     // .NET debugger
+                                                          "https://localhost:62746",    // .NET debugger
+                                                          "http://localhost:50565");    // Angular dev server
+                                  });
+            });
+
             builder.Services.AddDbContext<RomRepoContext>();
             builder.Services.AddScoped<IClientRepo, ClientRepo>();
             builder.Services.AddScoped<IAppService, AppService>();
@@ -58,7 +71,8 @@ namespace romrepo.win
             host.UseDefaultFiles();
             host.UseStaticFiles();
             host.MapControllers();
-            host.UseHttpsRedirection();
+            //host.UseHttpsRedirection();
+            host.UseCors("localhost");
 
             Task webTask = host.RunAsync();
             webTask.Wait();
