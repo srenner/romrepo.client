@@ -4,7 +4,7 @@
     "romrepo.win": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:62746",
+      "applicationUrl": "http://localhost:62746",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
       }
