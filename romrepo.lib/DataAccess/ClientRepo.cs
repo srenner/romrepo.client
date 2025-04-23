@@ -128,7 +128,7 @@ namespace romrepo.lib.DataAccess
             return new SystemSetting(); // empty if failed to return above
         }
 
-        public async Task InitSystemSetting(string settingName, string dataType, bool isRequired, bool isReadOnly)
+        public async Task InitSystemSetting(string settingName, string settingDescription, string dataType, bool isRequired, bool isReadOnly)
         {
             try
             {
@@ -138,6 +138,7 @@ namespace romrepo.lib.DataAccess
                     setting = new SystemSetting
                     {
                         Name = settingName,
+                        Description = settingDescription,
                         DataType = dataType,
                         IsRequired = isRequired,
                         IsReadOnly = isReadOnly

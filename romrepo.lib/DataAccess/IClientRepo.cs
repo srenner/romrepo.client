@@ -38,7 +38,7 @@ namespace romrepo.lib.DataAccess
 
         Task<SystemSetting> SaveSystemSetting(SystemSettingEnum setting, string settingValue);
         Task<SystemSetting> SaveSystemSetting(string settingName, string settingValue);
-        Task InitSystemSetting(string settingName, string dataType, bool isRequired, bool isReadOnly);
+        Task InitSystemSetting(string settingName, string settingDescription, string dataType, bool isRequired, bool isReadOnly);
 
 
         Task<IEnumerable<SystemSetting>> SaveSystemSettings(IEnumerable<SystemSetting> settings);
