@@ -18,7 +18,7 @@ namespace romrepo.win
             _appService = appService;
         }
 
-        private async Task<bool> InitAsync()
+        private async Task<bool> InitAsync(CancellationToken cancellationToken)
         {
             _settings = await _appService.InitSystemSettings();
 
@@ -30,13 +30,39 @@ namespace romrepo.win
                 _logger.LogInformation("Unique ID set to: {uniqueID}", uniqueID);
             }
 
+            var romRootFolderSetting = _settings.Find(f => f.Name == SystemSettingEnum.RomRootFolder.Value);
+
+            if(string.IsNullOrWhiteSpace(romRootFolderSetting?.Value))
+            {
+                _logger.LogWarning("Rom root folder not set in settings.");
+             
+                while(!cancellationToken.IsCancellationRequested)
+                {
+                    await Task.Delay(1000, cancellationToken);
+                    
+                    var rootFolder = await _appService.GetSystemSettingValue(SystemSettingEnum.RomRootFolder.Value);
+                    if (!string.IsNullOrWhiteSpace(rootFolder))
+                    {
+                        if(Directory.Exists(rootFolder))
+                        {
+                            _logger.LogInformation("Rom root folder set to: {romRootFolder}", romRootFolderSetting.Value);
+
+                            //refresh all settings
+
+                            _settings.Find(f => f.Name == SystemSettingEnum.RomRootFolder.Value).Value = rootFolder;
+                            break;
+                        }
+                    }
+                }
+            }
+
             _logger.LogInformation("Worker initialized at: {time}", DateTimeOffset.Now);
             return true;
         }
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            if(await InitAsync())
+            if(await InitAsync(cancellationToken))
             {
                 var rootFolder = _settings.Find(f => f.Name == SystemSettingEnum.RomRootFolder.Value).Value;
                 if(!string.IsNullOrWhiteSpace(rootFolder))

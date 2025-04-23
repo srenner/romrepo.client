@@ -44,6 +44,11 @@ namespace romrepo.lib.DataAccess
             return await _context.Core.Where(w => w.IsActive == false).ToListAsync();
         }
 
+        public async Task<IEnumerable<Core>> GetDiscoveredCores()
+        {
+            return await _context.Core.Where(w => w.IsActive == null).ToListAsync();
+        }
+
         public async Task<int> AddCores(IEnumerable<Core> cores)
         {
             try
