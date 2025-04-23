@@ -37,7 +37,7 @@ namespace romrepo.lib.Models
         /// </summary>
         public string? FileExtensions { get; set; }
 
-        public bool IsActive { get; set; } = true;
+        public bool? IsActive { get; set; } = null;
         
         public bool IsFavorite { get; set; } = false;
         

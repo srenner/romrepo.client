@@ -16,6 +16,7 @@ namespace romrepo.lib.DataAccess
         Task<IEnumerable<Core>> GetAllCores();
         Task<IEnumerable<Core>> GetActiveCores();
         Task<IEnumerable<Core>> GetInactiveCores();
+        Task<IEnumerable<Core>> GetDiscoveredCores();
 
         Task<int> AddCores(IEnumerable<Core> cores);
         Task<bool> UpdateCore(Core coreID);

@@ -23,9 +23,10 @@ namespace romrepo.lib.Services
             _appService = appService;
         }
 
+        [Obsolete("Use GetActiveCores(), GetInactiveCores(), and/or GetDiscoveredCores()")]
         public async Task<IEnumerable<Core>> GetAllCores()
         {
-            return await _repo.GetActiveCores();
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<Core>> GetActiveCores()
@@ -36,6 +37,11 @@ namespace romrepo.lib.Services
         public async Task<IEnumerable<Core>> GetInactiveCores()
         {
             return await _repo.GetInactiveCores();
+        }
+
+        public async Task<IEnumerable<Core>> GetDiscoveredCores()
+        {
+            return await _repo.GetDiscoveredCores();
         }
 
         public async Task<int> AutoAddDiscoveredCores(string rootFolder, CancellationToken cancellationToken)
@@ -108,8 +114,9 @@ namespace romrepo.lib.Services
                 FileExtensions = "",
                 ZipAsRom = false,
                 SevenZipAsRom = false,
-                IsActive = false,
+                IsActive = null,
                 IsFavorite = false,
+                IsHidden = false,
                 DateCreated = now,
                 DateUpdated = now
             };
