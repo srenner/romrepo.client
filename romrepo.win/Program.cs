@@ -48,7 +48,8 @@ namespace romrepo.win
                                       policy.WithOrigins("http://localhost:5000",       // deployed as service
                                                           "http://localhost:62746",     // .NET debugger
                                                           "https://localhost:62746",    // .NET debugger
-                                                          "http://localhost:50565");    // Angular dev server
+                                                          "http://localhost:50565",     // Angular dev server
+                                                          "http://127.0.0.1:50565");    // Angular dev server
                                   });
             });
 
